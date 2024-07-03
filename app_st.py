@@ -17,15 +17,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
-df = pd.read_csv("data/readmission_data.csv")
-
-
-
 # Function to load default data
 def load_default_data():
     df = pd.read_csv("data/readmission_data.csv")
     df.columns = df.columns.str.lower().str.replace(' ', '_')
-    df = df[df['age'] != 0]
     return df.copy()  # Return a copy to avoid mutation
 
 # Function to load user-uploaded data
@@ -33,13 +28,33 @@ def load_data(file):
     if file is not None:
         df = pd.read_csv(file)
         df.columns = df.columns.str.lower().str.replace(' ', '_')
-        df = df[df['age'] != 0]
         return df.copy()  # Return a copy to avoid mutation
     else:
         return load_default_data()
 
+# Set page configuration at the very start
+st.set_page_config(page_title="Health + Hospitals Data Analysis App", page_icon=":hospital:", layout="wide")
+
 def home():
-    st.title("Welcome to the NYC Health + Hospitals Data Analysis App")
+    # Add custom CSS for title
+    st.markdown(
+        """
+        <style>
+        .title {
+            font-size: 36px;
+            color: blue;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+            border-radius: 20px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Add title with custom class
+    st.markdown('<h1 class="title">Health + Hospitals Data Analysis App</h1>', unsafe_allow_html=True)
 
     # Autoplay video using Streamlit video with autoplay argument
     video_file = open('data/nychh_intro.mp4', 'rb')
@@ -47,23 +62,28 @@ def home():
     st.video(video_bytes, format='video/mp4', start_time=0)
 
     st.write("""
-        The leading public healthcare provider in the United States, offering vital inpatient, outpatient, and home-based services to over one million people annually at various locations.
+        Large public health system providers in the United States, like NYC Health + Hospitals (NYCHH), 
+        offer essential inpatient, outpatient, and home-based services to over a million New Yorkers each year. 
+        NYCHH operates more than 70 locations across the city's five boroughs, 
+        providing comprehensive healthcare services to diverse communities [NYC Health + Hospitals](https://www.nychealthandhospitals.org).
 
-        This application offers a robust data analysis tool designed to explore, analyze, and predict patient readmission rates using advanced machine learning and deep learning techniques.
+        This app provides a comprehensive data analysis tool to explore, analyze, 
+        and predict patient readmission rates using various machine learning models and deep learning techniques.
 
-        Navigate through the app using the panel on the left to access different sections:
-        - **Home**: Overview and information about the healthcare system.
-        - **EDA**: Conduct Exploratory Data Analysis on the dataset.
+        Use the navigation panel on the left to explore different sections of the app:
+        - **Home**: Introduction and information about NYCHH.
+        - **EDA**: Perform Exploratory Data Analysis on the dataset.
         - **Feature Engineering**: Process and prepare data for modeling.
-        - **Model Training**: Train various machine learning models.
-        - **Prediction**: Generate predictions using trained models. 
-        """)
+        - **Model Training**: Train different machine learning models.
+        - **Prediction**: Make predictions using trained models.
+    """)
 
 
 
 # EDA
 def eda(df):
-    st.title("Exploratory Data Analysis")    
+    st.title("Exploratory Data Analysis")
+    
     st.write("### Data Overview")
     st.write(df.head())
 
@@ -244,17 +264,20 @@ def prediction(df, model_choice):
     
     # Determine the boundaries for the numerical inputs
     numerical_columns = ['age', 'bmi', 'length_of_stay', 'num_medications', 'num_procedures']
-    numerical_bounds = {col: (int(df[col].min()), int(df[col].max())) for col in numerical_columns}
+    numerical_bounds = {col: (df[col].min(), df[col].max()) for col in numerical_columns}
     
     input_data = {}
     for col in df.columns:
         if col != 'readmission':
-            if col in numerical_columns:
+            if col == 'bmi':
                 min_val, max_val = numerical_bounds[col]
-                input_data[col] = st.slider(col, min_value=min_val, max_value=max_val, value=min_val)
+                input_data[col] = st.number_input(col, min_value=min_val, max_value=max_val, value=min_val, format="%.1f")
+            elif col in numerical_columns:
+                min_val, max_val = int(numerical_bounds[col][0]), int(numerical_bounds[col][1])
+                input_data[col] = st.number_input(col, min_value=min_val, max_value=max_val, value=min_val, format="%d")
             elif df[col].dtype == object or len(df[col].unique()) <= 10:  # Assuming categorical if less than 10 unique values
                 unique_values = df[col].unique()
-                input_data[col] = st.selectbox(col, options=unique_values)
+                input_data[col] = st.selectbox(col, options=unique_values, index=0)
             else:
                 input_data[col] = st.number_input(col, value=0)
     
@@ -288,6 +311,7 @@ def prediction(df, model_choice):
             st.error(f"Model file not found: {e}. Please ensure the model is trained and saved correctly.")
         except ValueError as e:
             st.error(f"Value error: {e}. Please ensure the input values are correct and match the training data format.")
+
 
 def main():
     st.sidebar.title("Navigation")
