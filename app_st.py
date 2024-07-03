@@ -22,9 +22,6 @@ def load_default_data():
     df = pd.read_csv("data/readmission_data.csv")
     df.columns = df.columns.str.lower().str.replace(' ', '_')
     return df.copy()  # Return a copy to avoid mutation
-
-
-
 # Function to load user-uploaded data
 def load_data(file):
     if file is not None:
