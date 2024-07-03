@@ -19,9 +19,11 @@ import os
 
 # Function to load default data
 def load_default_data():
-    df = pd.read_csv("nychh_readmission_data.csv")
+    df = pd.read_csv("data/readmission_data.csv")
     df.columns = df.columns.str.lower().str.replace(' ', '_')
     return df.copy()  # Return a copy to avoid mutation
+
+
 
 # Function to load user-uploaded data
 def load_data(file):
@@ -36,7 +38,7 @@ def home():
     st.title("Welcome to the NYC Health + Hospitals Data Analysis App")
 
     # Autoplay video using Streamlit video with autoplay argument
-    video_file = open('first_app/data/nychh_intro.mp4', 'rb')
+    video_file = open('data/nychh_intro.mp4', 'rb')
     video_bytes = video_file.read()
     st.video(video_bytes, format='video/mp4', start_time=0)
 
