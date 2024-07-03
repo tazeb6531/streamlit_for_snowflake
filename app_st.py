@@ -17,16 +17,23 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
+df = pd.read_csv("data/readmission_data.csv")
+
+
+
 # Function to load default data
 def load_default_data():
     df = pd.read_csv("data/readmission_data.csv")
     df.columns = df.columns.str.lower().str.replace(' ', '_')
+    df = df[df['age'] != 0]
     return df.copy()  # Return a copy to avoid mutation
+
 # Function to load user-uploaded data
 def load_data(file):
     if file is not None:
         df = pd.read_csv(file)
         df.columns = df.columns.str.lower().str.replace(' ', '_')
+        df = df[df['age'] != 0]
         return df.copy()  # Return a copy to avoid mutation
     else:
         return load_default_data()
@@ -39,24 +46,24 @@ def home():
     video_bytes = video_file.read()
     st.video(video_bytes, format='video/mp4', start_time=0)
 
-st.write("""
-    The leading public healthcare provider in the United States, offering vital inpatient, outpatient, and home-based services to over one million people annually at various locations.
+    st.write("""
+        The leading public healthcare provider in the United States, offering vital inpatient, outpatient, and home-based services to over one million people annually at various locations.
 
-    This application offers a robust data analysis tool designed to explore, analyze, and predict patient readmission rates using advanced machine learning and deep learning techniques.
+        This application offers a robust data analysis tool designed to explore, analyze, and predict patient readmission rates using advanced machine learning and deep learning techniques.
 
-    Navigate through the app using the panel on the left to access different sections:
-    - **Home**: Overview and information about the healthcare system.
-    - **EDA**: Conduct Exploratory Data Analysis on the dataset.
-    - **Feature Engineering**: Process and prepare data for modeling.
-    - **Model Training**: Train various machine learning models.
-    - **Prediction**: Generate predictions using trained models.
-""")
+        Navigate through the app using the panel on the left to access different sections:
+        - **Home**: Overview and information about the healthcare system.
+        - **EDA**: Conduct Exploratory Data Analysis on the dataset.
+        - **Feature Engineering**: Process and prepare data for modeling.
+        - **Model Training**: Train various machine learning models.
+        - **Prediction**: Generate predictions using trained models. 
+        """)
+
 
 
 # EDA
 def eda(df):
-    st.title("Exploratory Data Analysis")
-    
+    st.title("Exploratory Data Analysis")    
     st.write("### Data Overview")
     st.write(df.head())
 
