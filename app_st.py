@@ -39,19 +39,19 @@ def home():
     video_bytes = video_file.read()
     st.video(video_bytes, format='video/mp4', start_time=0)
 
-    st.write("""
-        NYC Health + Hospitals (NYCHH) is the largest public health care system in the United States. 
-        We provide essential inpatient, outpatient, and home-based services to more than one million New Yorkers every year in more than 70 locations across the city's five boroughs.
-        
-        This app provides a comprehensive data analysis tool to explore, analyze, and predict patient readmission rates using various machine learning models and deep learning techniques.
+st.write("""
+    The leading public healthcare provider in the United States, offering vital inpatient, outpatient, and home-based services to over one million people annually at various locations.
 
-        Use the navigation panel on the left to explore different sections of the app:
-        - **Home**: Introduction and information about NYCHH.
-        - **EDA**: Perform Exploratory Data Analysis on the dataset.
-        - **Feature Engineering**: Process and prepare data for modeling.
-        - **Model Training**: Train different machine learning models.
-        - **Prediction**: Make predictions using trained models.
-    """)
+    This application offers a robust data analysis tool designed to explore, analyze, and predict patient readmission rates using advanced machine learning and deep learning techniques.
+
+    Navigate through the app using the panel on the left to access different sections:
+    - **Home**: Overview and information about the healthcare system.
+    - **EDA**: Conduct Exploratory Data Analysis on the dataset.
+    - **Feature Engineering**: Process and prepare data for modeling.
+    - **Model Training**: Train various machine learning models.
+    - **Prediction**: Generate predictions using trained models.
+""")
+
 
 # EDA
 def eda(df):
