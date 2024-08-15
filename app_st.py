@@ -33,7 +33,7 @@ def load_data(file):
         return load_default_data()
 
 # Set page configuration at the very start
-st.set_page_config(page_title="Health + Hospitals Data Analysis App", page_icon=":hospital:", layout="wide")
+st.set_page_config(page_title="NYC Health + Hospitals Data Analysis App", page_icon=":hospital:", layout="wide")
 
 def home():
     # Add custom CSS for title
